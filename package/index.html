@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Trinix</title>
+</head>
+
+<body>
+  <div>
+    <webview id="foo" src="https://bigml.com/" preload="./inyector.js" style="height:600px;">
+      <div class="indicator"></div>
+    </webview>
+  </div>
+  <script src="./renderer.js"></script>
+  <script type="text/javascript">
+    var $ = require('jquery')
+    onload = () => {
+      const webview = document.getElementById('foo')
+      const indicator = document.querySelector('.indicator')
+
+      const loadstart = () => {
+        indicator.innerText = 'loading...'
+      }
+
+      const loadstop = () => {
+        indicator.innerText = ''
+      }
+
+      webview.addEventListener('did-start-loading', loadstart)
+      webview.addEventListener('did-stop-loading', loadstop)
+
+      webview.addEventListener("dom-ready", function () {
+        webview.send("request");
+
+        webview.send("delete-element-id", {
+          id: "footer",
+          text: ""
+        });
+
+        webview.send("change-text-element-class", {
+          class: "navbar-wrapper",
+          text: ""
+        });
+
+      });
+    }
+  </script>
+</body>
+
+</html>
